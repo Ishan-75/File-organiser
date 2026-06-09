@@ -9,9 +9,11 @@ file_types = {
     "Videos": [".mp4", ".mkv"],
     "Audio": [".mp3", ".wav"]
 }
+organized_count = 0
 for file in os.listdir(folder_path):
     file_path = os.path.join(folder_path, file)
-    extension = os.path.splitext(file)[1].lower()
+    if os.path.isfile(file_path):
+        extension = os.path.splitext(file)[1].lower()
     for category , extensions  in file_types.items():
       if extension in extensions:
           target_folder = os.path.join(folder_path,category)
@@ -20,11 +22,20 @@ for file in os.listdir(folder_path):
               exist_ok = True
           )
           destination_path = os.path.join(target_folder,file)
-          shutil.move(
-              file_path,
-              destination_path
-          )
+          try:
           
-          print(f"{file} moved to {category}")
+            shutil.move(
+                file_path,
+                destination_path
+            ) 
+            organized_count += 1
+            print(
+                    f"{file} moved to {category}"
+                )
+            
+          except Exception as e:
+              print(
+                    f"Error moving {file}: {e}"
+                )
           break
 print("completed")
